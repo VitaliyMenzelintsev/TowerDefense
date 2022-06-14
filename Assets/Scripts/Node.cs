@@ -49,8 +49,6 @@ public class Node : MonoBehaviour
 		if (!buildManager.CanBuild)                                 // проверка возможности строительства 
 			return;
 
-		//buildManager.BuildTurretOn(this);
-
 		BuildTurret(buildManager.GetTurrettoBuild());
     }
 

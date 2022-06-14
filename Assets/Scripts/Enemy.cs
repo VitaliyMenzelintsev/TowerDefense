@@ -6,14 +6,14 @@ public class Enemy : MonoBehaviour
     public float startSpeed = 10f;
 
     [Header("Unity Stuff")]
-    public Image healthBar;                     // шкала здоровья
+    public Image healthBar;                    
 
 
     [HideInInspector]
     public float speed;
     public GameObject deathEffect;
-    public int valueOfEnemy = 30;               // деньги за уничтожение врага
-    public float startHealth = 100;                  // хп врага
+    public int valueOfEnemy = 30;               
+    public float startHealth = 100;           
     private float health = 100;
 
 

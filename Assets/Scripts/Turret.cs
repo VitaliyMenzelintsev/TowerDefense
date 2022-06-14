@@ -118,7 +118,6 @@ public class Turret : MonoBehaviour
 
 	void Shoot()
     {
-		//создал GameObject, присвоил ему каждую заспавненную пулю
 		GameObject bulletGameObject = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
 		// обратился к скрипту Bullet, создал переменную bullet и присвоил ей компонент 
 		Bullet bullet = bulletGameObject.GetComponent<Bullet>();
