@@ -2,30 +2,30 @@
 
 public class Shop : MonoBehaviour
 {
-    public TurretBlueprint standartTurret;
-    public TurretBlueprint missileLauncher;
-    public TurretBlueprint laserBeamer;
+    public TurretBlueprint StandartTurret;
+    public TurretBlueprint MissileLauncher;
+    public TurretBlueprint LaserBeamer;
 
     BuildManager buildManager;                            // ссылка на билдменеджер
-    void Start()
+    private void Start()
     {
-        buildManager = BuildManager.instance;             // инициализация билдменеджера
+        buildManager = BuildManager.Instance;             // инициализация билдменеджера
     }
-    public void SelectStandartTurret()                    // выбор стандартной башни
+    private void SelectStandartTurret()                    // выбор стандартной башни
     {
         Debug.Log("Standart Turret selected");
-        buildManager.SelectTurretToBuild(standartTurret); // выбрали стандартную турель из скрипта билдменеджер и теперь можно её строить
+        buildManager.SelectTurretToBuild(StandartTurret); // выбрали стандартную турель из скрипта билдменеджер и теперь можно её строить
     }
-    public void SelectMissileLauncher()                   // выбор ракетной башни
+    private void SelectMissileLauncher()                   // выбор ракетной башни
     {
         Debug.Log("Missile Launcher selected");
-        buildManager.SelectTurretToBuild(missileLauncher);  
+        buildManager.SelectTurretToBuild(MissileLauncher);  
     }
 
-    public void SelectLaserBeamer()                      // выбор лазерной башни
+    private void SelectLaserBeamer()                      // выбор лазерной башни
     {
         Debug.Log("Laser Beamer selected");
-        buildManager.SelectTurretToBuild(laserBeamer);
+        buildManager.SelectTurretToBuild(LaserBeamer);
     }
 
 }

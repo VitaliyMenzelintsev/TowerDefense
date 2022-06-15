@@ -1,48 +1,46 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Enemy))]
 public class EnemyMovement : MonoBehaviour
 {
-    private Transform target;                   // переменная цель типа (класс) Трансформ
-    private int wavepointIndex = 0;             // индекс точки маршрута из списка
-    private Enemy enemy;
+    private Transform _target;                   // переменная цель типа (класс) Трансформ
+    private int _wavepointIndex = 0;             // индекс точки маршрута из списка
+    private Enemy _enemy;
 
-    void Start()
+    private void Start()
     {
-        enemy = GetComponent<Enemy>();
+        _enemy = GetComponent<Enemy>();
 
-        target = WayPoints.points[0];           // ицинциализация target как списка точек маршрута
+        _target = WayPoints.Points[0];           // ицинциализация target как списка точек маршрута
     }
 
-    void Update()
+    private void Update()
     {
-        Vector3 directionToPoint = target.position - transform.position;     // вектор направления к точке маршрута
+        Vector3 _directionToPoint = _target.position - transform.position;     // вектор направления к точке маршрута
 
-        transform.Translate(directionToPoint.normalized * enemy.speed * Time.deltaTime, Space.World);    // движение по вектору
+        transform.Translate(_directionToPoint.normalized * _enemy.Speed * Time.deltaTime, Space.World);    // движение по вектору
 
-        if (Vector3.Distance(transform.position, target.position) <= 0.2f)   // радиус срабатывания точки маршрута
+        if (Vector3.Distance(transform.position, _target.position) <= 0.2f)   // радиус срабатывания точки маршрута
         {
             GetNextWaypoint();
         }
 
-        enemy.speed = enemy.startSpeed;        // сбрасываем скорость на базовую каждый кадр
+        _enemy.Speed = _enemy.EnemyStartSpeed;        // сбрасываем скорость на базовую каждый кадр
     }
 
-    void GetNextWaypoint()
+    private void GetNextWaypoint()
     {
-        if (wavepointIndex >= WayPoints.points.Length - 1)                    // если точек маршрута больше нет - уничтожение обьекта
+        if (_wavepointIndex >= WayPoints.Points.Length - 1)                    // если точек маршрута больше нет - уничтожение обьекта
         {
             EndPath();
             return;
         }
-        wavepointIndex++;                                                     // следующая точка маршрута становится актуальной
+        _wavepointIndex++;                                                     // следующая точка маршрута становится актуальной
 
-        target = WayPoints.points[wavepointIndex];                            // цель - актуальная точка маршрута
+        _target = WayPoints.Points[_wavepointIndex];                            // цель - актуальная точка маршрута
     }
 
-    void EndPath()
+    private void EndPath()
     {
         PlayerStats.Lives--;                                                  // уменьшаем жизни, когда враг достигает финала пути
         WaveSpawner.EnemiesAlive--;                                           // уменьшение счётчика после достижения END

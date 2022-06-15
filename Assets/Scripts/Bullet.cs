@@ -3,81 +3,80 @@
 public class Bullet : MonoBehaviour
 {
 
-    private Transform target;
-    public float speed = 70f;
-    public int damage = 50;
-
-    public float explosionRadius = 0;
+    public Transform Target;
+    private float _speed = 70f;
+    private int _damage = 50;
+    private float _explosionRadius = 0;
 
     public GameObject impactEffect;
 
     public void Seek(Transform _target)
     {
-        target = _target;
+        this.Target = _target;
     }
 
-    void Update()
+    private void Update()
     {
-        if (target == null)
+        if (Target == null)
         {
             Destroy(gameObject);                                     // если у пули нет цели - уничтожаем её
             return;
         }
 
-        Vector3 direction = target.position - transform.position;    // вектор от пули до цели
-        float distanceThisFrame = speed * Time.deltaTime;            // расстояние, которое пролетает пуля
+        Vector3 _direction = Target.position - transform.position;    // вектор от пули до цели
+        float _distanceThisFrame = _speed * Time.deltaTime;            // расстояние, которое пролетает пуля
 
-        if (direction.magnitude <= distanceThisFrame)                 // длина вектора до цели <= расстояние до цели
+        if (_direction.magnitude <= _distanceThisFrame)                 // длина вектора до цели <= расстояние до цели
         {
             HitTarget();                                             // пуля попала в цель и запуск метода попадания
             return;
         }
-        transform.Translate(direction.normalized * distanceThisFrame, Space.World);                     //движение пули
-        transform.LookAt(target);                                    // разворот п оси Х в сторону цели
+        transform.Translate(_direction.normalized * _distanceThisFrame, Space.World);                     //движение пули
+        transform.LookAt(Target);                                    // разворот п оси Х в сторону цели
 
     }
-    void HitTarget()
+    private void HitTarget()
     {
-        GameObject effectInstatiate = (GameObject)Instantiate(impactEffect, transform.position, transform.rotation);
-        Destroy(effectInstatiate, 5f);
+        GameObject _effectInstatiate = (GameObject)Instantiate(impactEffect, transform.position, transform.rotation);
+        Destroy(_effectInstatiate, 5f);
 
-        if (explosionRadius > 0f)
+        if (_explosionRadius > 0f)
         {
             Explode();
         }
         else
         {
-            Damage(target);
+            Damage(Target);
         }
 
         Destroy(gameObject);                                           // уничтожение пули
     }
 
-    void Explode()
+    private void Explode()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
-        foreach (Collider collider in colliders)
+        Collider[] _colliders = Physics.OverlapSphere(transform.position, _explosionRadius);
+        foreach (Collider _collider in _colliders)
         {
-            if (collider.tag == "Enemy")
+            if (_collider.tag == "Enemy")
             {
-                Damage(collider.transform);
+                Damage(_collider.transform);
             }
         }
     }
 
-    void Damage(Transform enemy)
+    private void Damage(Transform _enemy)
     {
-        Enemy enemyBullet = enemy.GetComponent<Enemy>();
+        Enemy _enemyBullet = _enemy.GetComponent<Enemy>();
 
-        if (enemyBullet != null)
+        if (_enemyBullet != null)
         {
-            enemyBullet.TakeDamage(damage);
+            _enemyBullet.TakeDamage(_damage);
         }         
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, explosionRadius);
+        Gizmos.DrawWireSphere(transform.position, _explosionRadius);
     }
 }

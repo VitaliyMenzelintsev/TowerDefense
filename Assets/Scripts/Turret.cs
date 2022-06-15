@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Turret : MonoBehaviour
 {
@@ -30,11 +28,11 @@ public class Turret : MonoBehaviour
 	public Transform firePoint;                                                // точка вылета пули (ствол башни)
 
 
-	void Start ()
+	private void Start ()
 	{
 		InvokeRepeating("UpdateTarget", 0f, 0.5f);                             // отслеживаем цель раз в 0.5 сек 
 	}
-	void UpdateTarget()
+	private void UpdateTarget()
 	{
         GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);    // создаём список игровых обьектов из врагов
 		
@@ -62,7 +60,7 @@ public class Turret : MonoBehaviour
         }
 	}
 
-	void Update ()
+	private void Update ()
 	{
 		if (target == null)                                                // каждый кадр проверяем цель, если её нет, то успокаиваемся
 		{
@@ -92,7 +90,7 @@ public class Turret : MonoBehaviour
 		}
 	}
 
-	void LockOnTarget()
+	private void LockOnTarget()
     {
 		                                                                          // настраиваем угол поворота башни за целью
 		Vector3 direction = target.position - transform.position;                 // вектор указывает на позицию цели
@@ -104,7 +102,7 @@ public class Turret : MonoBehaviour
 		partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f);             // задаём вращение верхушке башни (X и Z freeze)
 	}
 
-	void Laser()
+	private void Laser()
     {
 		targetEnemy.TakeDamage(damageOverTime * Time.deltaTime);                  // урон от лазера
 		targetEnemy.Slow(slowProcent);                                            // замедление от лазера
@@ -116,7 +114,7 @@ public class Turret : MonoBehaviour
 		lineRenderer.SetPosition(1, target.position);                             // firepoint и target
     }
 
-	void Shoot()
+	private void Shoot()
     {
 		GameObject bulletGameObject = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
 		// обратился к скрипту Bullet, создал переменную bullet и присвоил ей компонент 
@@ -127,7 +125,7 @@ public class Turret : MonoBehaviour
 		}
     }
 
-	void OnDrawGizmosSelected()                                                    // обозначение дальности действия ВЫБРАННОЙ башни
+	private void OnDrawGizmosSelected()                                                    // обозначение дальности действия ВЫБРАННОЙ башни
     {
 		Gizmos.color = Color.red;
 		Gizmos.DrawWireSphere(transform.position, range);

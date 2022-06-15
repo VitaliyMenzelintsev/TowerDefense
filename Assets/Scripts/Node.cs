@@ -1,131 +1,129 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Node : MonoBehaviour
 {
-	public Color hoverColor;                                       // цвет при наведении курсора на ноду
-	public Color notEnoughMoneyColor;                              // цвет недостаточности денег
-	private Color startColor;                                      // изначальный цвет ноды
-	private Renderer rend;                                         // обьявление переменной отображения Render
+	public Color HoverColor;                                       // цвет при наведении курсора на ноду
+	public Color NotEnoughMoneyColor;                              // цвет недостаточности денег
+	private Color _startColor;                                     // изначальный цвет ноды
+	private Renderer _renderer;                                    // обьявление переменной отображения Render
 
-	private Vector3 positionOffset = new Vector3(0f, 0.5f, 0f);    // вектор смещения башни при спавне на ноде
+	private Vector3 _positionOffset = new Vector3(0f, 0.5f, 0f);    // вектор смещения башни при спавне на ноде
 
 	[HideInInspector]
-	public GameObject turret;
+	public GameObject Turret;
 	[HideInInspector]
-	public TurretBlueprint turretBlueprint;
+	public TurretBlueprint TurretBlueprint;
 	[HideInInspector]
-	public bool isUpgraded = false;
+	public bool IsUpgraded = false;
 
-	BuildManager buildManager;                                     // обьявление BuildManager
+	BuildManager BuildManager;                                     // обьявление BuildManager
 	 
-	void Start ()
+	private void Start ()
 	{
-		rend = GetComponent<Renderer>();                           // инициализация Render
-		startColor = rend.material.color;                          // инициализация изначального цывета
+		_renderer = GetComponent<Renderer>();                           // инициализация Render
+		_startColor = _renderer.material.color;                         // инициализация изначального цывета
 
-		buildManager = BuildManager.instance;                      // инициализация BuildManager
+		BuildManager = BuildManager.Instance;                      // инициализация BuildManager
 	}
 	
 	public Vector3 GetBuildPosition()
     {
-		return transform.position + positionOffset;
+		return transform.position + _positionOffset;
     }
 
 
-	void OnMouseDown()                                              
+	private void OnMouseDown()                                              
     {
 		if (EventSystem.current.IsPointerOverGameObject())
 			return;
 
-		if(turret != null)                                          // проверка наличия башни в ноде
+		if(Turret != null)                                          // проверка наличия башни в ноде
         {
-			buildManager.SelectNode(this);                          // выбираем эту ноду 
+			BuildManager.SelectNode(this);                          // выбираем эту ноду 
 			return;
         }
 
-		if (!buildManager.CanBuild)                                 // проверка возможности строительства 
+		if (!BuildManager.CanBuild)                                 // проверка возможности строительства 
 			return;
 
-		BuildTurret(buildManager.GetTurrettoBuild());
+		BuildTurret(BuildManager.GetTurrettoBuild());
     }
 
-	void BuildTurret(TurretBlueprint blueprint)
+	private void BuildTurret(TurretBlueprint _blueprint)
 	{
-		if (PlayerStats.Money < blueprint.cost)                // проверка на достаточность денег
+		if (PlayerStats.Money < _blueprint.cost)                // проверка на достаточность денег
 		{
 			Debug.Log("Not enough money to build");
 			return;
 		}
 
-		PlayerStats.Money -= blueprint.cost;                   // вычитание стоимости башни из денег игрока
+		PlayerStats.Money -= _blueprint.cost;                   // вычитание стоимости башни из денег игрока
 
-		GameObject _turret = (GameObject)Instantiate(blueprint.prefab, GetBuildPosition(), Quaternion.identity);
-		turret = _turret;
+		GameObject _turret = (GameObject)Instantiate(_blueprint.prefab, GetBuildPosition(), Quaternion.identity);
+		Turret = _turret;
 
-		turretBlueprint = blueprint;                           // инициализировали переменную чертежа
+		TurretBlueprint = _blueprint;                           // инициализировали переменную чертежа
 
-		GameObject effect = (GameObject)Instantiate(buildManager.buildEffect, GetBuildPosition(), Quaternion.identity);
-		Destroy(effect, 5f);                                   // уничтожить эффект через 5с
+		GameObject _effect = (GameObject)Instantiate(BuildManager.BuildEffect, GetBuildPosition(), Quaternion.identity);
+		Destroy(_effect, 5f);                                   // уничтожить эффект через 5с
 
 		Debug.Log($"Turret build! Money left: " + PlayerStats.Money);
 	}
 
     public void UpgradeTurret()
     {
-		if (PlayerStats.Money < turretBlueprint.upgradeCost)                // проверка на достаточность денег
+		if (PlayerStats.Money < TurretBlueprint.upgradeCost)                // проверка на достаточность денег
 		{
 			Debug.Log("Not enough money to upgrade");
 			return;
 		}
 
-		PlayerStats.Money -= turretBlueprint.upgradeCost;                   // вычитание стоимости башни из денег игрока
+		PlayerStats.Money -= TurretBlueprint.upgradeCost;                   // вычитание стоимости башни из денег игрока
 
-		Destroy(turret);                                                    // уничтожение старой башни при апгрейде
+		Destroy(Turret);                                                    // уничтожение старой башни при апгрейде
 
-		GameObject _turret = (GameObject)Instantiate(turretBlueprint.upgradedPrefab, GetBuildPosition(), Quaternion.identity); // ставим апгрейд туррели из собственного префаба
-		turret = _turret;
+		GameObject _turret = (GameObject)Instantiate(TurretBlueprint.upgradedPrefab, GetBuildPosition(), Quaternion.identity); // ставим апгрейд туррели из собственного префаба
+		Turret = _turret;
 
-		GameObject effect = (GameObject)Instantiate(buildManager.buildEffect, GetBuildPosition(), Quaternion.identity);
-		Destroy(effect, 5f); 
+		GameObject _effect = (GameObject)Instantiate(BuildManager.BuildEffect, GetBuildPosition(), Quaternion.identity);
+		Destroy(_effect, 5f); 
 
-		isUpgraded = true;
+		IsUpgraded = true;
 
 		Debug.Log($"Upgrade is done! Money left: " + PlayerStats.Money);
 	}
 
 	public void SellTurret()
     {
-		PlayerStats.Money += turretBlueprint.GetSellAmount();        // возврат денег за турель
-		Destroy(turret);
-		turretBlueprint = null;                                      // сброс чертежа
+		PlayerStats.Money += TurretBlueprint.GetSellAmount();        // возврат денег за турель
+		Destroy(Turret);
+		TurretBlueprint = null;                                      // сброс чертежа
     }
 
-    void OnMouseEnter ()                             
+	private void OnMouseEnter()                             
 	{
-		rend.materials[0].color = hoverColor;                        // придаём цвет выделенной ноде, на которую навели курсор
+		_renderer.materials[0].color = HoverColor;                        // придаём цвет выделенной ноде, на которую навели курсор
 
 		if (EventSystem.current.IsPointerOverGameObject())          // проверка нет ли между курсором и нодой UI
 			return;
 
-		if (!buildManager.CanBuild)
+		if (!BuildManager.CanBuild)
 			return;
 
-		if (buildManager.HasMoney)
+		if (BuildManager.HasMoney)
         {
-            rend.material.color = hoverColor;
+            _renderer.material.color = HoverColor;
         }
         else
         {
-			rend.material.color = notEnoughMoneyColor;
+			_renderer.material.color = NotEnoughMoneyColor;
         }
 
 	}
 
-	void OnMouseExit()                                  
+	private void OnMouseExit()                                  
     {
-		rend.materials[0].color = startColor;                        // возвращаем ноде исходный цвет
+		_renderer.materials[0].color = _startColor;                        // возвращаем ноде исходный цвет
     }
 }

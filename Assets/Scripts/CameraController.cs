@@ -1,55 +1,49 @@
 ﻿using UnityEngine;
 
-public class CameraController : MonoBehaviour {
+public class CameraController : MonoBehaviour
+{
+    private float _scrollCoefficient = 1000f;
+    private float _scrollSpeed = 5f;
+    private float _minYPosition = 15f;
+    private float _maxYPosition = 70f;
+    private float _panoramicSpeed = 30f;
+    private float _panoramicBoardThickness = 4f; // толщина полосы, где курсор регистрирует подведение к краю экрана
+    private bool _movementIsActive = true;
 
-	private bool movementIsActive = true;
-	private float scrollCoefficient = 1000f;
-	public float scrollSpeed = 5f;
-	public float minYPosition = 15f;
-	public float maxYPosition = 70f;
 
-
-	public float panoramicSpeed = 30f;
-	public float panoramicBoardThickness = 5f; // толщина полосы, где курсор регистрирует подведение к краю экрана
-	
-	void Update ()
-	{
-		if (GameManager.GameIsOver)
+    private void Update()
+    {
+        if (GameManager.GameIsOver)
         {
-			this.enabled = false;
-			return;
+            this.enabled = false;
+            return;
         }
 
-		if (Input.GetKey(KeyCode.Escape))
-			movementIsActive = !movementIsActive;
-		if (!movementIsActive)
-			return;
+        if (Input.GetKey(KeyCode.Escape))
+            _movementIsActive = !_movementIsActive;
 
-        if (Input.GetKey("w") || Input.mousePosition.y >= Screen.height - panoramicBoardThickness)
-        {
-			transform.Translate(Vector3.forward * panoramicSpeed * Time.deltaTime, Space.World);
-        }
-		if (Input.GetKey("s") || Input.mousePosition.y <= panoramicBoardThickness)
-		{
-			transform.Translate(Vector3.back * panoramicSpeed * Time.deltaTime, Space.World);
-		}
-		if (Input.GetKey("d") || Input.mousePosition.x >= Screen.width - panoramicBoardThickness)
-		{
-			transform.Translate(Vector3.right * panoramicSpeed * Time.deltaTime, Space.World);
-		}
-		if (Input.GetKey("a") || Input.mousePosition.x <=  panoramicBoardThickness)
-		{
-			transform.Translate(Vector3.left * panoramicSpeed * Time.deltaTime, Space.World);
-		}
+        if (!_movementIsActive)
+            return;
 
-		float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (Input.GetKey("w") || Input.mousePosition.y >= Screen.height - _panoramicBoardThickness)
+            transform.Translate(Vector3.forward * _panoramicSpeed * Time.deltaTime, Space.World);
+        
+        if (Input.GetKey("s") || Input.mousePosition.y <= _panoramicBoardThickness)
+            transform.Translate(Vector3.back * _panoramicSpeed * Time.deltaTime, Space.World);
+        
+        if (Input.GetKey("d") || Input.mousePosition.x >= Screen.width - _panoramicBoardThickness)
+            transform.Translate(Vector3.right * _panoramicSpeed * Time.deltaTime, Space.World);
+        
+        if (Input.GetKey("a") || Input.mousePosition.x <= _panoramicBoardThickness)  
+            transform.Translate(Vector3.left * _panoramicSpeed * Time.deltaTime, Space.World);
+        
 
-		Vector3 position = transform.position;	
+        float _scroll = Input.GetAxis("Mouse ScrollWheel");
+        Vector3 _position = transform.position;
 
-		position.y -= scroll * scrollSpeed * Time.deltaTime * scrollCoefficient;
-		position.y = Mathf.Clamp(position.y, minYPosition, maxYPosition);          //зажимаем возможность прокрутки в фиксированных значениях
-
-		transform.position = position;
-
-	}
+        _position.y -= _scroll * _scrollSpeed * Time.deltaTime * _scrollCoefficient;
+        _position.y = Mathf.Clamp(_position.y, _minYPosition, _maxYPosition);          //зажимаем возможность прокрутки в фиксированных значениях
+        
+        transform.position = _position;
+    }
 }

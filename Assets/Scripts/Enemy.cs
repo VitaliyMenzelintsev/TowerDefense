@@ -3,47 +3,46 @@ using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-    public float startSpeed = 10f;
+    public float EnemyStartSpeed = 10f;
 
     [Header("Unity Stuff")]
-    public Image healthBar;                    
-
+    public Image HealthBar;                    
 
     [HideInInspector]
-    public float speed;
-    public GameObject deathEffect;
-    public int valueOfEnemy = 30;               
-    public float startHealth = 100;           
-    private float health = 100;
+    public float Speed;
+    public GameObject DeathEffect;
 
+    private int _valueOfEnemy = 30;
+    private float _startHealth = 100;           
+    private float _health = 100;
 
     private void Start()
     {
-        speed = startSpeed;                          // выставление скорости
-        health = startHealth;
+        Speed = EnemyStartSpeed;                          // выставление скорости
+        _health = _startHealth;
     }
 
-    public void TakeDamage(float amount)
+    public void TakeDamage(float _amount)
     {
-        health -= amount;
+        _health -= _amount;
 
-        healthBar.fillAmount = health / startHealth;               // отображение здоровья 
+        HealthBar.fillAmount = _health / _startHealth;               // отображение здоровья 
 
-        if (health <= 0)
+        if (_health <= 0)
         {
             Die();
         }
     }
 
-    public void Slow(float procent)
+    public void Slow(float _percent)
     {
-        speed = startSpeed * (1f - procent);           // расчёт замедления
+        Speed = EnemyStartSpeed * (1f - _percent);           // расчёт замедления
     }
 
-    void Die()
+    private void Die()
     {
-        PlayerStats.Money += valueOfEnemy;                                                     // начисление денег за врага
-        GameObject effect = (GameObject)Instantiate(deathEffect, transform.position, Quaternion.identity); // спавн эффекта
+        PlayerStats.Money += _valueOfEnemy;                                                     // начисление денег за врага
+        GameObject effect = (GameObject)Instantiate(DeathEffect, transform.position, Quaternion.identity); // спавн эффекта
         Destroy(effect, 3f);                                                                   // скип эффекта
 
         WaveSpawner.EnemiesAlive--;                                                         // уменьшение счётчика после смерти

@@ -1,60 +1,59 @@
 ﻿using UnityEngine;
 
-public class BuildManager : MonoBehaviour 
+public class BuildManager : MonoBehaviour
 {
-    public static BuildManager instance;                           // делаем синглтон
+    public static BuildManager Instance;                           // делаем синглтон
     void Awake()
     {
-        if(instance != null)
+        if (Instance != null)
         {
             Debug.LogError("more than 1 buildmanager here");
             return;
         }
-        instance = this;
+        Instance = this;
     }
 
-    public GameObject standartTurretPrefab;       
-    public GameObject missileLauncherPrefab;
+    public GameObject StandartTurretPrefab;
+    public GameObject MissileLauncherPrefab;
     public GameObject LaserBeamerPrefab;
+    public GameObject BuildEffect;
 
-    public GameObject buildEffect;
-   
-    private TurretBlueprint turretToBuild;                                           // варианты, какую башню построить
-    private Node selectedNode;
-   
-    public NodeUI nodeUI; 
+    public NodeUI NodeUI;
 
-    public bool CanBuild { get { return turretToBuild != null; } }                   // можно ли строить (только чтение)
-    public bool HasMoney { get { return PlayerStats.Money >= turretToBuild.cost; } } // хватает ли денег
+    private TurretBlueprint _turretToBuild;                                           // варианты, какую башню построить
+    private Node _selectedNode;
 
-    public void SelectNode(Node node)
+    public bool CanBuild { get { return _turretToBuild != null; } }                   // можно ли строить (только чтение)
+    public bool HasMoney { get { return PlayerStats.Money >= _turretToBuild.cost; } } // хватает ли денег
+
+    public void SelectNode(Node _node)
     {
-        if(selectedNode == node)
+        if (_selectedNode == _node)
         {
             DeselectNode();
             return;
         }
 
-        selectedNode = node;    
-        turretToBuild = null;
+        _selectedNode = _node;
+        _turretToBuild = null;
 
-        nodeUI.SetTarget(node);
+        NodeUI.SetTarget(_node);
     }
 
     public void DeselectNode()                // отмена выбора ноды
     {
-        selectedNode = null;
-        nodeUI.Hide();
+        _selectedNode = null;
+        NodeUI.Hide();
     }
 
-    public void SelectTurretToBuild(TurretBlueprint turret)
+    public void SelectTurretToBuild(TurretBlueprint _turret)
     {
-        turretToBuild = turret;
+        _turretToBuild = _turret;
         DeselectNode();                       // выкл nodeUI, когда нажимаем на UI выбора турели
     }
 
     public TurretBlueprint GetTurrettoBuild()
     {
-        return turretToBuild;
+        return _turretToBuild;
     }
 }

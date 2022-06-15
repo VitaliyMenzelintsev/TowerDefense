@@ -4,18 +4,19 @@ using UnityEngine.SceneManagement;
 
 public class GameOver : MonoBehaviour
 {
-    public Text roundsText;
-    void OnEnable()
+    public Text RoundsText;
+
+    private void OnEnable()
     {
-        roundsText.text = "rounds survived: " + PlayerStats.Rounds.ToString();
+        RoundsText.text = "rounds survived: " + PlayerStats.Rounds.ToString();
     }
 
-    public void Retry()
+    private void Retry()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // т.к. в игре 1 уровень - перезагружаем его
     }
 
-    public void Menu()
+    private void Menu()
     {
         Debug.Log("MENU");
     }

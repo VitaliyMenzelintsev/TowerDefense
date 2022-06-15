@@ -2,12 +2,11 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class LiveUI : MonoBehaviour
-
 {
-    public Text livesText;
+    public Text LivesText;
   
-    void Update()
+    private void Update()
     {
-        livesText.text = PlayerStats.Lives + "LIVES";
+        LivesText.text = PlayerStats.Lives + "LIVES";
     }
 }

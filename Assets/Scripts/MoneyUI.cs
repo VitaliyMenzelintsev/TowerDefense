@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MoneyUI : MonoBehaviour
 {
-    public Text moneyText;
+    public Text MoneyText;
 
-    void Update()
+    private void Update()
     {
-        moneyText.text = "$"+ PlayerStats.Money.ToString();
+        MoneyText.text = "$"+ PlayerStats.Money.ToString();
     }
 }

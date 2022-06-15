@@ -1,39 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static bool GameIsOver;
-
-    public GameObject gameOverUI;
+    public GameObject GameOverUI;
 
     private void Start()
     {
         GameIsOver = false;
     }
 
-    void Update()
+    private void Update()
     {
         if (GameIsOver)
             return;
 
         if (Input.GetKeyDown("e"))
-        {
             EndGame();
-        }
-
+        
         if (PlayerStats.Lives <= 0)
-        {
             EndGame();
-        }
-
     }
 
-    void EndGame()
+    private void EndGame()
     {
         GameIsOver = true;
 
-        gameOverUI.SetActive(true);
+        GameOverUI.SetActive(true);
     }
 }
